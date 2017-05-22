@@ -58,7 +58,7 @@ client.on('connect', function () {
             doorState = doorState == "closed" ? "open" : "closed";
             client.publish(topic, doorState);
         },
-        3000x
+        3000
     );
 
 })
