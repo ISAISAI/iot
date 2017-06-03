@@ -28,9 +28,8 @@ var deng = gpio.export(20, {
     // 数据输出端口
     direction: 'out',
     // ready 是一步的
-    ready: function () { 
-        
-	deng.set(0); 
+    ready: function () {   
+	     deng.set(0); 
     }
 });
 
