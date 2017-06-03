@@ -66,19 +66,32 @@ var doorIO = gpio.export(21, {
     }
 });
 
+
+var lightIO = gpio.export(20, {
+    // 数据输出端口
+    direction: 'out',
+    // ready 是一步的
+    ready: function () {   
+         lightIO.set(0); 
+    }
+});
+
 client.on('message', function (topic, message) {
     // message is Buffer
-       console.log(topic+message.toString())
+    console.log(topic+message.toString())
 
     if (ready) {
-        doorIO.set(function () {
-            setTimeout(function () {
-                doorIO.set(0)
-                console.log('set0');
-            }, 7000)
-
-            console.log(doorIO.value);    // should log 1
-        });
+        if (/openDoor/.test(topic)) {
+            doorIO.set(function () {
+                setTimeout(function () {
+                    doorIO.set(0)
+                    console.log('set0');
+                }, 7000)
+            });
+        }else if(/openLight/.test(topic)) {
+            doorIO.set(1);
+        }
+        
     }
 
 
@@ -89,7 +102,7 @@ client.on('connect', function () {
     // 订阅 开门消息
     //https://www.npmjs.com/package/mqtt#subscribe   # 是通配符  或者直接使用  /1000193944/zhuxiaozhi_001/openDoor	,可以是数组或字符串
     //  client.subscribe(['#/get','#/oepnDoor'])
-    client.subscribe('/1000193944/zhuxiaozhi_001/openDoor')
+    client.subscribe(['#/openLight','#/oepnDoor'])
     setInterval(
         ()=> {
             doorState = doorState == "closed" ? "open" : "closed";
